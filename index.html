@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENEROPT AI — Intelligent Industrial Energy Management & Optimization</title>
+  <meta name="description" content="AI-powered Industrial Energy Management Dashboard for manufacturing facilities. Monitor machine energy, predict demand, run production simulations, and generate optimized machine schedules.">
+
+  <!-- Favicon / Brand Symbol -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/chat-assistant.css">
+
+  <style>
+    /* Inline helper styles for tour banner & header dropdowns */
+    .tour-banner-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--blue-border);
+      padding: 0.65rem 1.75rem;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+      position: sticky;
+      top: 70px;
+      z-index: 39;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .tour-banner-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .tour-step-badge {
+      background: var(--blue-light);
+      color: var(--blue-primary);
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--blue-border);
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      top: 55px;
+      right: 170px;
+      width: 320px;
+      background: #ffffff;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      z-index: 100;
+      display: none;
+      overflow: hidden;
+    }
+
+    .notif-header {
+      padding: 0.75rem 1rem;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .notif-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.8rem;
+      transition: background var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .notif-item:hover {
+      background: var(--bg-hover);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- ========================================================================
+       LEFT SIDEBAR NAVIGATION
+       ======================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-wrapper">
+        <div class="brand-logo-icon">
+          <!-- Bolt / Lightning Icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <span class="brand-name">ENEROPT <span class="ai-tag">AI</span></span>
+          <span class="brand-subtitle">Intelligent Industrial Energy</span>
+        </div>
+      </div>
+
+      <!-- Factory Facility Switcher -->
+      <div class="plant-selector-wrapper" title="Current Connected Factory Facility">
+        <div class="plant-meta">
+          <span class="plant-label">Active Plant</span>
+          <span class="plant-name">Plant #4 (Machining Hub)</span>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Navigation</div>
+
+      <!-- 1. Overview -->
+      <a href="#overview" class="nav-item active" data-view="overview" id="nav-overview">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Overview</span>
+      </a>
+
+      <!-- 2. Machine Monitor -->
+      <a href="#machines" class="nav-item" data-view="machines" id="nav-machines">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+          <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+          <line x1="6" y1="6" x2="6.01" y2="6"></line>
+          <line x1="6" y1="18" x2="6.01" y2="18"></line>
+        </svg>
+        <span>Machine Monitor</span>
+        <span class="nav-badge badge-alert" title="1 Machine with Abnormal Telemetry">1 Alert</span>
+      </a>
+
+      <!-- 3. AI Optimization -->
+      <a href="#optimization" class="nav-item" data-view="optimization" id="nav-optimization">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span>AI Optimization</span>
+        <span class="nav-badge badge-sparkle">Ready</span>
+      </a>
+
+      <!-- 4. Production Simulation -->
+      <a href="#simulation" class="nav-item" data-view="simulation" id="nav-simulation">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="4" y1="21" x2="4" y2="14"></line>
+          <line x1="4" y1="10" x2="4" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12" y2="3"></line>
+          <line x1="20" y1="21" x2="20" y2="16"></line>
+          <line x1="20" y1="12" x2="20" y2="3"></line>
+          <line x1="1" y1="14" x2="7" y2="14"></line>
+          <line x1="9" y1="8" x2="15" y2="8"></line>
+          <line x1="17" y1="16" x2="23" y2="16"></line>
+        </svg>
+        <span>Production Simulation</span>
+        <span class="nav-badge badge-sparkle" style="background:#e0e7ff;color:#4338ca;">What-If</span>
+      </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="system-status-box">
+        <div class="system-status-row">
+          <span style="font-weight:700;color:var(--text-secondary);">EnerOpt Engine</span>
+          <span class="status-dot-pulse"></span>
+        </div>
+        <div class="system-status-row" style="color:var(--text-muted)">
+          <span>8/8 Machines Online</span>
+          <span>MQTT 12ms</span>
+        </div>
+      </div>
+
+      <!-- Live Simulated MQTT Telemetry Packet Feed -->
+      <div class="mqtt-ticker-box" id="mqttTickerBox">
+        <div class="mqtt-header">
+          <span>MQTT Telemetry (12ms)</span>
+          <span style="color:#22c55e;">STREAMING</span>
+        </div>
+        <span class="mqtt-payload" id="mqttPayloadText">factory/plant04/telemetry: 1,284 kW</span>
+      </div>
+
+      <div class="footer-action-links">
+        <button class="footer-link-btn" id="sidebarSettingsBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span>Settings</span>
+        </button>
+
+        <button class="footer-link-btn" id="sidebarHelpBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>Help & Tour</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       MAIN WRAPPER (TOPBAR + CONTENT)
+       ======================================================================== -->
+  <div class="main-wrapper">
+
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="breadcrumbs">
+          <span class="breadcrumb-root" id="breadcrumbRoot">Factory Overview</span>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current" id="breadcrumbCurrent">Energy & Demand Performance</span>
+        </div>
+
+        <!-- Hackathon Guided Demo Flow Button -->
+        <button class="demo-flow-btn" id="hackathonTourBtn" title="Launch the 6-step jury demonstration tour">
+          <span class="demo-flow-badge">6-Step</span>
+          <span>🎯 Guided Demo Flow</span>
+        </button>
+      </div>
+
+      <div class="header-right">
+        <!-- Live Telemetry Stream Toggle -->
+        <button class="live-stream-toggle-btn" id="liveStreamToggleBtn" title="Toggle Live MQTT Factory Telemetry Stream">
+          <span class="live-pulse-dot"></span>
+          <span id="liveStreamStatusText">LIVE STREAM</span>
+        </button>
+
+        <!-- Factory Status -->
+        <div class="factory-status-pill">
+          <span class="status-dot-green"></span>
+          <span>Operational</span>
+        </div>
+
+        <!-- Shift & Telemetry Clock -->
+        <div class="telemetry-time-badge">
+          <span>Shift A</span>
+          <span>•</span>
+          <span class="tabular-nums" id="telemetryLiveClock">16:29:23</span>
+        </div>
+
+        <!-- Notification Bell -->
+        <button class="header-icon-btn" id="notificationBtn" title="Alerts & Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="notification-count">2</span>
+        </button>
+
+        <!-- User Profile -->
+        <div class="user-profile-badge" title="Authenticated User Profile">
+          <div class="user-avatar">RS</div>
+          <div class="user-details">
+            <span class="user-name">Rajesh Sharma</span>
+            <span class="user-role">Plant Energy Director</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Notification Dropdown -->
+    <div class="notification-dropdown" id="notificationDropdown">
+      <div class="notif-header">
+        <span>Factory Notifications</span>
+        <span class="badge badge-red">2 Unread</span>
+      </div>
+      <div class="notif-item">
+        <span style="font-size:1.1rem">🚨</span>
+        <div>
+          <div style="font-weight:700;color:var(--red-primary);">CNC-02 Power Surge (+20.6%)</div>
+          <div style="color:var(--text-muted);font-size:0.75rem;">Consuming 181 kW vs 150 kW norm. Temp 71°C.</div>
+          <div style="font-size:0.7rem;color:var(--text-dim);margin-top:2px;">12m ago</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <span style="font-size:1.1rem">⚡</span>
+        <div>
+          <div style="font-weight:700;color:var(--amber-primary);">Peak Demand Risk (1,420 kW)</div>
+          <div style="color:var(--text-muted);font-size:0.75rem;">Predicted surge between 14:00 - 16:00.</div>
+          <div style="font-size:0.7rem;color:var(--text-dim);margin-top:2px;">28m ago</div>
+        </div>
+      </div>
+      <div class="notif-item" style="border:none">
+        <span style="font-size:1.1rem">✅</span>
+        <div>
+          <div style="font-weight:700;color:var(--green-primary);">AI Optimization Ready</div>
+          <div style="color:var(--text-muted);font-size:0.75rem;">Schedule plan generated saving ₹7,400.</div>
+          <div style="font-size:0.7rem;color:var(--text-dim);margin-top:2px;">1h ago</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hackathon Guided Demo Banner (Appears when tour is started) -->
+    <div class="tour-banner-bar" id="hackathonTourBar">
+      <div class="tour-banner-info">
+        <span class="tour-step-badge" id="tourStepBadge">Hackathon Demo</span>
+        <div>
+          <span id="tourStepTitle" style="font-size:0.85rem;font-weight:700;color:var(--text-primary);">Step 1: MONITOR</span>
+          <p id="tourStepDesc" style="font-size:0.78rem;color:var(--text-muted);margin-top:1px;">Factory telemetry continuously tracked.</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <button class="btn btn-secondary btn-sm" id="tourPrevBtn">← Back</button>
+        <button class="btn btn-primary btn-sm" id="tourNextBtn">Next Step →</button>
+        <button class="header-icon-btn" id="tourCloseBtn" style="width:28px;height:28px;" title="Exit Tour">✕</button>
+      </div>
+    </div>
+
+    <!-- Main Content Workspace -->
+    <main class="main-content">
+
+      <!-- ====================================================================
+           PAGE 1 — ENERGY OVERVIEW (LANDING PAGE)
+           ==================================================================== -->
+      <section class="page-view active" id="view-overview">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Energy Overview</h1>
+            <p class="page-subtitle">Real-time energy consumption, prediction and factory performance</p>
+          </div>
+          <div class="page-header-actions">
+            <div class="time-tabs">
+              <button class="time-tab active" data-range="24h">24 Hours</button>
+              <button class="time-tab" data-range="7d">7 Days</button>
+              <button class="time-tab" data-range="30d">30 Days</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Large KPI Cards -->
+        <div class="kpi-grid">
+          <!-- Card 1: Current Power -->
+          <div class="kpi-card">
+            <div class="kpi-card-top">
+              <span class="kpi-label">Current Power</span>
+              <div class="kpi-icon-badge kpi-icon-blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value tabular-nums" id="kpiCurrentPower">1,284</span>
+              <span class="kpi-unit">kW</span>
+            </div>
+            <div class="kpi-footer">
+              <span class="badge badge-normal">🟢 Normal</span>
+              <span class="text-muted text-sm">Target &lt; 1,350 kW</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Predicted Demand -->
+          <div class="kpi-card">
+            <div class="kpi-card-top">
+              <span class="kpi-label">Predicted Demand</span>
+              <div class="kpi-icon-badge kpi-icon-amber">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value tabular-nums" id="kpiPredictedDemand" style="color:var(--amber-primary)">1,420</span>
+              <span class="kpi-unit">kW</span>
+            </div>
+            <div class="kpi-footer">
+              <span class="badge badge-warning">🟡 Next 2 hours</span>
+              <span class="text-sm font-semibold" style="color:var(--amber-primary)">+10.6% surge</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Today's Consumption -->
+          <div class="kpi-card">
+            <div class="kpi-card-top">
+              <span class="kpi-label">Today's Consumption</span>
+              <div class="kpi-icon-badge kpi-icon-green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value tabular-nums" id="kpiTodayConsumption">18,640</span>
+              <span class="kpi-unit">kWh</span>
+            </div>
+            <div class="kpi-footer">
+              <span class="text-sm font-semibold" style="color:var(--amber-primary)">▲ +3.8% vs yesterday</span>
+              <span class="text-muted text-sm">17,950 kWh base</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Energy Cost -->
+          <div class="kpi-card">
+            <div class="kpi-card-top">
+              <span class="kpi-label">Energy Cost</span>
+              <div class="kpi-icon-badge kpi-icon-blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value tabular-nums" id="kpiTodayCost" style="color:var(--text-primary)">₹1,46,820</span>
+            </div>
+            <div class="kpi-footer">
+              <span class="text-muted text-sm">Today's estimated cost</span>
+              <span class="badge badge-neutral">₹7.87/kWh avg</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN ENERGY GRAPH -->
+        <div class="chart-card">
+          <div class="chart-header-row">
+            <div class="chart-title-area">
+              <h2 class="chart-main-title">Actual vs AI Predicted Energy Consumption</h2>
+              <span class="chart-main-subtitle">15-minute telemetry interval with LSTM-based neural load forecast</span>
+            </div>
+
+            <div class="chart-controls">
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-color-actual"></div>
+                  <span>Actual Consumption</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color-predict"></div>
+                  <span>AI Predicted Load</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-marker-forecast"></div>
+                  <span>Forecast Boundary</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Telemetry Stat Strip -->
+          <div class="chart-stats-strip">
+            <div class="chart-stat-item">
+              <span class="chart-stat-label">Live Active Load</span>
+              <span class="chart-stat-value tabular-nums" style="color:var(--blue-primary)">
+                1,284 kW <span class="badge badge-normal" style="font-size:0.62rem;padding:1px 5px;">Nominal</span>
+              </span>
+            </div>
+            <div class="chart-stat-item">
+              <span class="chart-stat-label">Predicted Peak Surge</span>
+              <span class="chart-stat-value tabular-nums" style="color:var(--amber-primary)">
+                1,420 kW <span class="badge badge-warning" style="font-size:0.62rem;padding:1px 5px;">@ 14:00</span>
+              </span>
+            </div>
+            <div class="chart-stat-item">
+              <span class="chart-stat-label">Contract Demand Limit</span>
+              <span class="chart-stat-value tabular-nums text-muted">
+                1,350 kW <span class="badge badge-neutral" style="font-size:0.62rem;padding:1px 5px;">Threshold</span>
+              </span>
+            </div>
+            <div class="chart-stat-item">
+              <span class="chart-stat-label">Forecast Model Accuracy</span>
+              <span class="chart-stat-value tabular-nums" style="color:var(--green-primary)">
+                94.2% <span class="badge badge-green" style="font-size:0.62rem;padding:1px 5px;">LSTM v3</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Canvas Interactive Chart with Floating Tooltip -->
+          <div class="chart-canvas-wrapper" id="mainChartWrapper">
+            <canvas id="mainEnergyChart"></canvas>
+            <div class="chart-floating-tooltip" id="chartTooltip">
+              <div class="tooltip-time" id="tooltipTime">14:00</div>
+              <div class="tooltip-row">
+                <span id="tooltipType" style="color:#94a3b8;font-size:0.75rem;">AI Prediction</span>
+                <span class="tooltip-val" id="tooltipVal">1,420 kW</span>
+              </div>
+              <div class="tooltip-row" id="tooltipExtraRow" style="margin-top:0.35rem;border-top:1px dashed rgba(255,255,255,0.1);padding-top:0.25rem;">
+                <span style="color:#f59e0b;font-size:0.7rem;" id="tooltipExtraText">▲ +70 kW over limit</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-footer-row">
+            <div class="accuracy-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>Forecast accuracy: 94.2%</span>
+            </div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">
+              Data: Illustrative factory telemetry & neural model predictions
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Grid: Energy History + ESG Energy Mix + AI Insight Card -->
+        <div class="overview-bottom-grid">
+          <!-- Energy History -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span>Energy History</span>
+                </h3>
+                <span class="card-subtitle">Historical consumption and percentage changes</span>
+              </div>
+            </div>
+
+            <div class="history-grid" id="energyHistoryGrid">
+              <!-- Dynamically populated by overview.js -->
+            </div>
+          </div>
+
+          <!-- ESG Carbon & Clean Energy Mix Card -->
+          <div class="esg-energy-mix-card" id="esgEnergyMixCard">
+            <div>
+              <div class="card-header" style="margin-bottom:0.4rem;">
+                <h3 class="card-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                  </svg>
+                  <span>Clean Energy Mix & ESG</span>
+                </h3>
+                <span class="badge badge-normal" id="esgCarbonSavedBadge">🌱 667 kg CO₂ Avoided</span>
+              </div>
+              <span class="card-subtitle">Scope 2 emissions tracking & rooftop solar PV mix</span>
+
+              <!-- Solar vs Grid Progress Bar -->
+              <div class="esg-progress-bar">
+                <div class="esg-bar-solar" id="esgSolarBar" style="width: 28%;" title="Rooftop Solar PV: 28%"></div>
+                <div class="esg-bar-grid" id="esgGridBar" style="width: 72%;" title="Grid Power: 72%"></div>
+              </div>
+
+              <div class="esg-mix-legend">
+                <div style="display:flex;align-items:center;gap:0.4rem;">
+                  <span style="width:9px;height:9px;background:#f59e0b;border-radius:2px;"></span>
+                  <span style="font-weight:700;color:var(--text-secondary);font-size:0.75rem;" id="esgSolarText">Solar PV: 28% (360 kW)</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.4rem;">
+                  <span style="width:9px;height:9px;background:var(--blue-primary);border-radius:2px;"></span>
+                  <span style="font-weight:700;color:var(--text-secondary);font-size:0.75rem;" id="esgGridText">Grid: 72% (924 kW)</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:0.85rem;padding-top:0.65rem;border-top:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:space-between;font-size:0.75rem;">
+              <span style="color:var(--text-muted);">Today's Scope 2 Footprint:</span>
+              <span class="tabular-nums font-bold" style="color:var(--text-primary);" id="esgTodayEmissions">13.23 tCO₂e (0.71 kg/kWh)</span>
+            </div>
+          </div>
+
+          <!-- Prominent AI Insight Card -->
+          <div class="ai-insight-card">
+            <div>
+              <div class="ai-insight-header">
+                <div class="ai-avatar-icon">🤖</div>
+                <div>
+                  <h3 class="ai-insight-title">AI Insight</h3>
+                  <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">Autonomous Load Balancer</span>
+                </div>
+              </div>
+
+              <div class="ai-insight-body">
+                <p>
+                  <strong>Energy demand is expected to increase by 12% between 2:00 PM and 4:00 PM.</strong>
+                </p>
+                <p style="margin-top:0.4rem;color:var(--text-muted);font-size:0.8rem;">
+                  AI recommends shifting non-critical machine operations outside this peak period to prevent demand-charge penalties.
+                </p>
+              </div>
+            </div>
+
+            <div class="ai-insight-footer">
+              <span style="font-size:0.75rem;color:var(--blue-primary);font-weight:700;">Potential savings: ₹7,400</span>
+              <button class="btn btn-primary btn-sm" id="viewOptimizationBtn">
+                View Optimization →
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           PAGE 2 — MACHINE MONITOR
+           ==================================================================== -->
+      <section class="page-view" id="view-machines">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Machine Energy Monitor</h1>
+            <p class="page-subtitle">Monitor machine-level energy consumption and detect abnormal behavior</p>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="table-filter-bar">
+          <div class="filter-pills">
+            <button class="filter-pill-btn active" data-filter="all">All Machines (8)</button>
+            <button class="filter-pill-btn" data-filter="abnormal">🔴 Abnormal (1)</button>
+            <button class="filter-pill-btn" data-filter="warning">🟡 Warning (2)</button>
+            <button class="filter-pill-btn" data-filter="normal">🟢 Normal (5)</button>
+          </div>
+
+          <div class="search-box">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-input" id="machineSearchInput" placeholder="Search machines or alerts...">
+          </div>
+        </div>
+
+        <!-- Machine Table -->
+        <div class="machine-table-wrapper">
+          <table class="machine-table">
+            <thead>
+              <tr>
+                <th>Machine</th>
+                <th>Current Power</th>
+                <th>Normal Power</th>
+                <th>Difference</th>
+                <th>Temperature</th>
+                <th>Load</th>
+                <th>Status</th>
+                <th>AI Alert</th>
+                <th style="text-align:right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="machineTableBody">
+              <!-- Dynamically populated by machine-monitor.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           PAGE 3 — AI OPTIMIZATION
+           ==================================================================== -->
+      <section class="page-view" id="view-optimization">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Smart AI Optimization</h1>
+            <p class="page-subtitle">AI-generated actions to reduce energy consumption while maintaining production targets</p>
+          </div>
+        </div>
+
+        <!-- AI Engine Status Banner -->
+        <div class="ai-engine-banner">
+          <div class="ai-engine-info">
+            <div class="ai-engine-icon">⚡</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:0.6rem;">
+                <h3 style="font-size:1.05rem;font-weight:800;color:var(--text-primary)">AI Optimization Engine</h3>
+                <span class="badge badge-normal">🟢 Optimization plan ready</span>
+              </div>
+              <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0.25rem;">
+                AI analyzed energy demand, machine conditions, production requirements and predicted peak demand.
+              </p>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="window.showToast('Re-evaluating optimization constraints... Plan verified optimal.', 'info')">
+            ↺ Re-run Optimizer
+          </button>
+        </div>
+
+        <!-- BEFORE vs AFTER COMPARISON -->
+        <div class="before-after-grid">
+          <!-- Current Plan Card -->
+          <div class="comparison-card">
+            <span class="badge badge-neutral comparison-card-badge">Current Schedule</span>
+            <h3 class="card-title" style="color:var(--text-secondary)">Current Plan</h3>
+            <span class="card-subtitle">Default un-staggered plant operation</span>
+
+            <div class="comparison-metrics-list">
+              <div class="comp-metric-item">
+                <span class="comp-metric-label">Energy</span>
+                <span class="comp-metric-value tabular-nums" id="curPlanEnergy">13,420 kWh</span>
+              </div>
+              <div class="comp-metric-item">
+                <span class="comp-metric-label">Cost</span>
+                <span class="comp-metric-value tabular-nums" id="curPlanCost">₹1,06,000</span>
+              </div>
+              <div class="comp-metric-item">
+                <span class="comp-metric-label">Production Time</span>
+                <span class="comp-metric-value tabular-nums" id="curPlanTime">9h 10m</span>
+              </div>
+              <div class="comp-metric-item">
+                <span class="comp-metric-label">Machines</span>
+                <span class="comp-metric-value tabular-nums" id="curPlanMachines">8 active</span>
+              </div>
+            </div>
+            <div style="margin-top:1rem;font-size:0.72rem;color:var(--text-muted);">
+              * Uncoordinated run schedule results in peak tariff penalties.
+            </div>
+          </div>
+
+          <!-- AI Optimized Plan Card -->
+          <div class="comparison-card optimized">
+            <span class="badge badge-normal comparison-card-badge">🟢 AI Optimized</span>
+            <h3 class="card-title" style="color:var(--green-primary)">AI Optimized Plan</h3>
+            <span class="card-subtitle">Staggered peak-shaving & automated idle suppression</span>
+
+            <div class="comparison-metrics-list">
+              <div class="comp-metric-item">
+                <span class="comp-metric-label">Energy</span>
+                <span class="comp-metric-value tabular-nums font-bold" id="optPlanEnergy" style="color:var(--green-primary)">12,480 kWh</span>
+                <span class="diff-pill diff-negative-good" style="margin-top:4px;display:inline-block">-940 kWh (-7.0%)</span>
+              </div>
+              <div class="comp-metric-item">
+                <span class="comp-metric-label">Cost</span>
+                <span class="comp-metric-value tabular-nums font-bold" id="optPlanCost" style="color:var(--green-primary)">₹98,600</span>
+                <span class="diff-pill diff-negative-good" style="margin-top:4px;display:inline-block">-₹7,400 savings</span>
+              </div>
+              <div class="comp-metric-item">
+                <span class="comp-metric-label">Production Time</span>
+                <span class="comp-metric-value tabular-nums font-bold" id="optPlanTime" style="color:var(--blue-primary)">8h 35m</span>
+                <span class="diff-pill diff-negative-good" style="margin-top:4px;display:inline-block">35m faster</span>
+              </div>
+              <div class="comp-metric-item">
+                <span class="comp-metric-label">Machines</span>
+                <span class="comp-metric-value tabular-nums font-bold" id="optPlanMachines">7 active</span>
+                <span class="diff-pill diff-negative-good" style="margin-top:4px;display:inline-block">1 machine freed</span>
+              </div>
+            </div>
+            <div style="margin-top:1rem;font-size:0.72rem;color:var(--text-muted);">
+              * Simulation/demo estimates based on dynamic plant model.
+            </div>
+          </div>
+        </div>
+
+        <!-- HOW AI OPTIMIZED: Visual Process Flow -->
+        <div class="process-flow-container">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>How AI Optimized</span>
+              </h3>
+              <span class="card-subtitle">End-to-end intelligent scheduling and dispatch workflow</span>
+            </div>
+          </div>
+
+          <div class="process-flow-track">
+            <!-- Step 1 -->
+            <div class="process-step-item">
+              <div class="step-circle">1</div>
+              <span class="step-label">Energy Forecast</span>
+              <span style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">1,420 kW peak identified</span>
+            </div>
+
+            <div class="step-arrow-connector"></div>
+
+            <!-- Step 2 -->
+            <div class="process-step-item">
+              <div class="step-circle">2</div>
+              <span class="step-label">Production Target</span>
+              <span style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">5,000 units demand</span>
+            </div>
+
+            <div class="step-arrow-connector"></div>
+
+            <!-- Step 3 -->
+            <div class="process-step-item">
+              <div class="step-circle">3</div>
+              <span class="step-label">Machine Status</span>
+              <span style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">CNC-02 thermal & load</span>
+            </div>
+
+            <div class="step-arrow-connector"></div>
+
+            <!-- Step 4 -->
+            <div class="process-step-item">
+              <div class="step-circle" style="background:var(--blue-light);border-color:var(--blue-primary);color:var(--blue-primary)">4</div>
+              <span class="step-label">AI Engine</span>
+              <span style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">Multi-variable solver</span>
+            </div>
+
+            <div class="step-arrow-connector"></div>
+
+            <!-- Step 5 -->
+            <div class="process-step-item">
+              <div class="step-circle">5</div>
+              <span class="step-label">Optimized Schedule</span>
+              <span style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">Staggered machine timing</span>
+            </div>
+
+            <div class="step-arrow-connector"></div>
+
+            <!-- Step 6 -->
+            <div class="process-step-item">
+              <div class="step-circle" style="border-color:var(--green-primary);color:var(--green-primary)">6</div>
+              <span class="step-label">Reduction</span>
+              <span style="font-size:0.7rem;color:var(--green-primary);font-weight:700;margin-top:2px;">-940 kWh & ₹7,400</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- OPTIMIZATION ACTIONS LIST -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 11l3 3L22 4"></path>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                <span>Recommended Optimization Actions</span>
+              </h3>
+              <span class="card-subtitle">Autonomous adjustments ready for supervisor authorization</span>
+            </div>
+          </div>
+
+          <div class="actions-list-container" id="optimizationActionsList">
+            <!-- Dynamically populated by ai-optimization.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           PAGE 4 — PRODUCTION SIMULATION (CORE FEATURE)
+           ==================================================================== -->
+      <section class="page-view" id="view-simulation">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Production Simulation</h1>
+            <p class="page-subtitle">Predict energy, time and machine requirements before starting production</p>
+          </div>
+        </div>
+
+        <!-- Large Input Panel -->
+        <div class="simulation-input-card">
+          <div class="sim-input-grid">
+            <!-- Target Input -->
+            <div class="form-group">
+              <label class="form-label" for="simTargetInput">How many products do you want to produce?</label>
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <input type="number" id="simTargetInput" class="form-input-number" value="5000" min="1000" max="10000" step="100">
+                <span style="font-weight:700;color:var(--text-muted);font-size:1.1rem;">Units</span>
+              </div>
+            </div>
+
+            <!-- Product Type -->
+            <div class="form-group">
+              <label class="form-label" for="simProductSelect">Product Type</label>
+              <select id="simProductSelect" class="form-select">
+                <option value="Product A" selected>Product A (Precision Gearbox)</option>
+                <option value="Product B">Product B (Hydraulic Valve)</option>
+                <option value="Product C">Product C (EV Drive Casing)</option>
+              </select>
+            </div>
+
+            <!-- Required Completion Time -->
+            <div class="form-group">
+              <label class="form-label" for="simDeadline">Required Completion Time</label>
+              <input type="text" id="simDeadline" class="form-select" value="Today — 6:00 PM (18:00)" readonly>
+            </div>
+
+            <!-- Run Button -->
+            <button class="btn btn-primary btn-lg" id="runSimulationBtn">
+              ⚡ Run AI Simulation
+            </button>
+          </div>
+
+          <!-- WHAT-IF PRODUCTION SLIDER -->
+          <div class="slider-container">
+            <div class="slider-header-row">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <span class="slider-label">Interactive What-If Production Target Slider</span>
+                <span class="badge badge-info">Live Model recalculation</span>
+              </div>
+              <span class="slider-current-target" id="sliderDisplayVal">5,000 units</span>
+            </div>
+
+            <input type="range" id="simTargetSlider" class="custom-range-slider" min="1000" max="10000" step="100" value="5000">
+
+            <div class="slider-scale-ticks">
+              <button class="preset-target-btn" data-val="1000">1,000</button>
+              <button class="preset-target-btn" data-val="2500">2,500</button>
+              <button class="preset-target-btn" data-val="5000">5,000 (Baseline)</button>
+              <button class="preset-target-btn" data-val="7500">7,500</button>
+              <button class="preset-target-btn" data-val="10000">10,000</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIMULATION RESULTS (5 Cards) -->
+        <div style="margin-bottom:0.75rem;display:flex;align-items:center;justify-content:space-between;">
+          <h2 style="font-size:1.1rem;font-weight:800;color:var(--text-primary)">Simulation Result</h2>
+          <span class="badge badge-info">AI Simulation Estimate</span>
+        </div>
+
+        <div class="sim-results-grid">
+          <!-- 1. Target -->
+          <div class="sim-result-card">
+            <span class="sim-result-label">Production Target</span>
+            <span class="sim-result-val tabular-nums" id="resTargetUnits">5,000 units</span>
+            <span class="text-sm text-muted">Selected quota</span>
+          </div>
+
+          <!-- 2. Estimated Time -->
+          <div class="sim-result-card">
+            <span class="sim-result-label">Estimated Time</span>
+            <span class="sim-result-val tabular-nums" id="resProductionTime" style="color:var(--blue-primary)">8h 35m</span>
+            <span class="text-sm font-semibold" style="color:var(--green-primary)">-35m vs normal</span>
+          </div>
+
+          <!-- 3. Expected Energy -->
+          <div class="sim-result-card">
+            <span class="sim-result-label">Expected Energy</span>
+            <span class="sim-result-val tabular-nums" id="resExpectedEnergy" style="color:var(--green-primary)">12,480 kWh</span>
+            <span class="text-sm font-semibold" style="color:var(--green-primary)">-940 kWh saved</span>
+          </div>
+
+          <!-- 4. Estimated Energy Cost -->
+          <div class="sim-result-card">
+            <span class="sim-result-label">Estimated Cost</span>
+            <span class="sim-result-val tabular-nums" id="resEstimatedCost">₹98,600</span>
+            <span class="text-sm font-semibold" style="color:var(--green-primary)">-₹7,400 saved</span>
+          </div>
+
+          <!-- 5. Machines Required -->
+          <div class="sim-result-card">
+            <span class="sim-result-label">Machines Required</span>
+            <div style="display:flex;align-items:baseline;gap:0.4rem;">
+              <span class="sim-result-val tabular-nums" id="resMachinesRequired">7</span>
+              <span style="font-size:0.85rem;color:var(--text-muted);font-weight:700;">/ 8 available</span>
+            </div>
+            <span class="text-sm text-muted">1 machine idle</span>
+          </div>
+        </div>
+
+        <!-- NORMAL PLAN vs AI OPTIMIZED PLAN COMPARISON TABLE -->
+        <div class="sim-table-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Normal Plan vs AI Optimized Plan</h3>
+              <span class="card-subtitle">Deterministic prototype comparison (*illustrative simulation values)</span>
+            </div>
+          </div>
+
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Normal Plan</th>
+                <th>AI Optimized</th>
+                <th>Difference</th>
+              </tr>
+            </thead>
+            <tbody id="simComparisonTableBody">
+              <!-- Dynamically populated by simulation.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- AI SIMULATION EXPLANATION -->
+        <div class="card" style="margin-bottom:1.5rem;">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">🤖 How AI plans your production</h3>
+              <span class="card-subtitle">Deterministic physics & trained energy scheduling logic</span>
+            </div>
+          </div>
+
+          <div style="font-family:var(--font-mono);font-size:0.82rem;background:#f8fafc;padding:0.75rem 1rem;border-radius:var(--radius-md);border:1px solid var(--border-default);color:var(--text-secondary);overflow-x:auto;">
+            Production Target → Machine Capacity → Machine Energy Profiles → Predicted Demand → Peak Detection → Production Scheduling → Optimized Plan
+          </div>
+
+          <div style="margin-top:1rem;background:var(--blue-light);padding:1rem;border-radius:var(--radius-md);border:1px solid var(--blue-border);">
+            <div style="display:flex;align-items:center;gap:0.5rem;color:var(--blue-primary);font-weight:800;font-size:0.88rem;margin-bottom:0.25rem;">
+              <span>⚡ AI Recommendation</span>
+            </div>
+            <p id="simRecommendationText" style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;">
+              To complete 5,000 units efficiently, AI recommends staggered machine operation and shifting non-critical operations away from the predicted peak-demand period.
+            </p>
+          </div>
+        </div>
+
+        <!-- PRODUCTION TIMELINE -->
+        <div class="timeline-container">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Production Timeline</h3>
+              <span class="card-subtitle">Visual dispatch schedule for simulated batch</span>
+            </div>
+            <span class="badge badge-normal">Total Duration: 8h 35m</span>
+          </div>
+
+          <div class="visual-timeline">
+            <!-- Event 1 -->
+            <div class="timeline-event-card">
+              <span class="timeline-time">08:00</span>
+              <span class="timeline-title">Production Start</span>
+              <span class="text-sm text-muted">Line warm-up & staging</span>
+            </div>
+
+            <!-- Event 2 -->
+            <div class="timeline-event-card">
+              <span class="timeline-time">09:30</span>
+              <span class="timeline-title">CNC Operations</span>
+              <span class="text-sm text-muted">CNC-01 & CNC-03 active</span>
+            </div>
+
+            <!-- Event 3 -->
+            <div class="timeline-event-card">
+              <span class="timeline-time">11:30</span>
+              <span class="timeline-title">Press Operations</span>
+              <span class="text-sm text-muted">Press-01 stamped batch</span>
+            </div>
+
+            <!-- Event 4 -->
+            <div class="timeline-event-card">
+              <span class="timeline-time">13:00</span>
+              <span class="timeline-title">Load Balancing</span>
+              <span class="text-sm text-muted">Dynamic throttle applied</span>
+            </div>
+
+            <!-- Event 5 (Highlight Avoided Peak) -->
+            <div class="timeline-event-card highlight-avoided">
+              <span class="timeline-time" style="color:var(--amber-primary)">14:00</span>
+              <span class="timeline-title" style="color:#b45309">Predicted peak avoided</span>
+              <span class="text-sm" style="color:#92400e">CNC-02 shifted 15m</span>
+            </div>
+
+            <!-- Event 6 -->
+            <div class="timeline-event-card">
+              <span class="timeline-time">16:00</span>
+              <span class="timeline-title">Final Stage</span>
+              <span class="text-sm text-muted">Inspection & packaging</span>
+            </div>
+
+            <!-- Event 7 -->
+            <div class="timeline-event-card highlight-completed">
+              <span class="timeline-time" id="timelineFinalTime" style="color:var(--green-primary)">16:35</span>
+              <span class="timeline-title" style="color:var(--green-primary)">Target Completed</span>
+              <span class="text-sm" style="color:var(--green-hover)">5,000 units verified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SAVINGS SUMMARY -->
+        <div style="margin-bottom:0.75rem;">
+          <h2 style="font-size:1.1rem;font-weight:800;color:var(--text-primary)">Savings Summary</h2>
+          <span style="font-size:0.75rem;color:var(--text-muted)">* Illustrative simulation results based on tariff rate ₹7.87/kWh</span>
+        </div>
+
+        <div class="savings-summary-grid">
+          <div class="savings-card">
+            <span class="savings-label">Energy Saved</span>
+            <div class="savings-val tabular-nums" id="sumEnergySaved">940 kWh</div>
+            <span class="text-sm" style="color:var(--green-primary);font-weight:600;">7.0% power reduction</span>
+          </div>
+
+          <div class="savings-card">
+            <span class="savings-label">Cost Saved</span>
+            <div class="savings-val tabular-nums" id="sumCostSaved">₹7,400</div>
+            <span class="text-sm" style="color:var(--green-primary);font-weight:600;">Direct tariff savings</span>
+          </div>
+
+          <div class="savings-card">
+            <span class="savings-label">Carbon Avoided (Scope 2)</span>
+            <div class="savings-val tabular-nums" id="sumCarbonSaved" style="color:#059669;">667.4 kg</div>
+            <span class="text-sm" style="color:var(--green-primary);font-weight:600;">CO₂e decarbonization</span>
+          </div>
+
+          <div class="savings-card">
+            <span class="savings-label">Peak Demand Reduction</span>
+            <div class="savings-val tabular-nums" id="sumPeakReduction">7%</div>
+            <span class="text-sm" style="color:var(--green-primary);font-weight:600;">Grid penalty eliminated</span>
+          </div>
+        </div>
+
+        <!-- SCADA / MES Industrial Dispatch Action Bar -->
+        <div style="background:#ffffff;border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1.5rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-xs);">
+          <div style="display:flex;align-items:center;gap:0.85rem;">
+            <div style="width:38px;height:38px;background:var(--blue-light);border:1px solid var(--blue-border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--blue-primary);">
+              🏭
+            </div>
+            <div>
+              <div style="font-weight:800;font-size:0.95rem;color:var(--text-primary);">Deploy Schedule to Shopfloor SCADA / MES</div>
+              <div style="font-size:0.78rem;color:var(--text-muted);">Transmits machine staggered timing setpoints directly to Siemens SIMATIC / Rockwell PLC via OPC-UA.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <button class="btn btn-secondary" id="viewAuditLogBtn">📋 Audit Trail</button>
+            <button class="btn btn-primary" id="openMesDispatchModalBtn">⚡ Dispatch to MES Work Order</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ========================================================================
+     MODAL / DRAWER: MACHINE DETAIL (PAGE 2)
+     ======================================================================== -->
+<div class="drawer-backdrop" id="machineDrawerBackdrop"></div>
+<div class="drawer-panel" id="machineDrawerPanel">
+  <div class="drawer-header">
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <span class="badge badge-abnormal" id="drawerStatusBadge">Abnormal</span>
+      <h3 class="drawer-title" id="drawerMachineTitle">CNC-02</h3>
+    </div>
+    <button class="drawer-close-btn" id="closeMachineDrawerBtn">✕</button>
+  </div>
+
+  <div class="drawer-content">
+    <!-- Key Metrics Grid -->
+    <div class="detail-kpi-grid">
+      <div class="detail-kpi-box">
+        <span class="detail-kpi-label">Current Power</span>
+        <div class="detail-kpi-val tabular-nums" id="drawerCurrentPower">181 kW</div>
+      </div>
+      <div class="detail-kpi-box">
+        <span class="detail-kpi-label">Normal Power</span>
+        <div class="detail-kpi-val tabular-nums text-muted" id="drawerNormalPower">150 kW</div>
+      </div>
+      <div class="detail-kpi-box">
+        <span class="detail-kpi-label">Excess</span>
+        <div class="detail-kpi-val tabular-nums" id="drawerExcess" style="color:var(--red-primary)">+20.6%</div>
+      </div>
+      <div class="detail-kpi-box">
+        <span class="detail-kpi-label">Temperature</span>
+        <div class="detail-kpi-val tabular-nums" id="drawerTemperature" style="color:var(--red-primary)">71°C</div>
+      </div>
+      <div class="detail-kpi-box">
+        <span class="detail-kpi-label">Normal Temp</span>
+        <div class="detail-kpi-val tabular-nums text-muted" id="drawerNormalTemp">60°C</div>
+      </div>
+      <div class="detail-kpi-box">
+        <span class="detail-kpi-label">Production Load</span>
+        <div class="detail-kpi-val tabular-nums" id="drawerProductionLoad">92%</div>
+      </div>
+    </div>
+
+    <!-- AI Detection Box -->
+    <div class="ai-detection-box" id="drawerAiDetection">
+      <div class="ai-detection-header" id="drawerDetectionTitle">
+        <span>⚠ Abnormal energy consumption detected</span>
+      </div>
+      <p class="ai-detection-text" id="drawerDetectionDesc">
+        CNC-02 is consuming significantly more energy than its normal operating range while production output remains nearly unchanged.
+      </p>
+    </div>
+
+    <!-- Multivariate Sensor Diagnostics (Vibration harmonics, PF, Bearing Health) -->
+    <div style="margin: 0.85rem 0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
+        <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Multivariate Sensor Diagnostics</span>
+        <span style="font-size:0.72rem;color:var(--blue-primary);font-weight:600;">OPC-UA Edge Telemetry</span>
+      </div>
+      <div class="multivariate-grid">
+        <div class="sensor-tile">
+          <span class="sensor-tile-label">Power Factor</span>
+          <span class="sensor-tile-val" id="drawerPowerFactor">0.78</span>
+          <span class="sensor-tile-status" id="drawerPowerFactorStatus" style="color:var(--amber-primary);">Degraded (Capacitor)</span>
+        </div>
+        <div class="sensor-tile">
+          <span class="sensor-tile-label">Vibration</span>
+          <span class="sensor-tile-val" id="drawerVibration">3.8 mm/s</span>
+          <span class="sensor-tile-status" id="drawerVibrationStatus" style="color:var(--red-primary);">Harmonic Stress</span>
+        </div>
+        <div class="sensor-tile">
+          <span class="sensor-tile-label">Bearing Health</span>
+          <span class="sensor-tile-val" id="drawerBearingHealth">64%</span>
+          <span class="sensor-tile-status" id="drawerBearingHealthStatus" style="color:var(--amber-primary);">Fair (Wear Alert)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Small Consumption Trend Chart -->
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
+        <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">6-Hour Telemetry Curve</span>
+        <span style="font-size:0.72rem;color:var(--red-primary);font-weight:600;">Spike at 13:30</span>
+      </div>
+      <div style="background:#f8fafc;border:1px solid var(--border-default);border-radius:var(--radius-md);height:140px;position:relative;">
+        <canvas id="machineDetailChart" style="width:100%;height:100%"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-footer">
+    <button class="btn btn-secondary" id="drawerAnalyzeBtn">Analyze Machine</button>
+    <button class="btn btn-primary" id="drawerOptimizeBtn">Optimize Machine →</button>
+  </div>
+</div>
+
+<!-- ========================================================================
+     MODAL: OPTIMIZATION ACTION DETAIL (PAGE 3)
+     ======================================================================== -->
+<div class="drawer-backdrop" id="actionModalBackdrop"></div>
+<div class="drawer-panel" id="actionModalPanel" style="width:480px;">
+  <div class="drawer-header">
+    <h3 class="drawer-title" id="modalActionMachineName">CNC-02 — Optimization Detail</h3>
+    <button class="drawer-close-btn" id="closeActionModalBtn">✕</button>
+  </div>
+
+  <div class="drawer-content">
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div class="detail-kpi-box">
+        <span class="detail-kpi-label">Current Schedule</span>
+        <div style="font-weight:700;margin-top:0.2rem;" id="modalCurrentSchedule">Continuous 09:00 - 15:30</div>
+      </div>
+
+      <div class="detail-kpi-box" style="border-color:var(--blue-border);background:var(--blue-light);">
+        <span class="detail-kpi-label" style="color:var(--blue-primary);">AI Recommended Schedule</span>
+        <div style="font-weight:800;color:var(--blue-primary);margin-top:0.2rem;" id="modalOptimizedSchedule">
+          09:00 - 13:45, Staggered Pause 15m, 14:00 - 15:15
+        </div>
+      </div>
+
+      <div class="detail-kpi-box">
+        <span class="detail-kpi-label">Reason for Optimization</span>
+        <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.2rem;" id="modalActionReason">
+          Predicted demand peak detected. Shift avoids overlapping heating cycles.
+        </div>
+      </div>
+
+      <div class="detail-kpi-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="detail-kpi-box">
+          <span class="detail-kpi-label">Expected Energy Reduction</span>
+          <div class="detail-kpi-val" style="color:var(--green-primary);" id="modalEnergyReduction">320 kWh</div>
+        </div>
+        <div class="detail-kpi-box">
+          <span class="detail-kpi-label">Expected Cost Reduction</span>
+          <div class="detail-kpi-val" style="color:var(--green-primary);" id="modalCostReduction">₹2,800</div>
+        </div>
+      </div>
+
+      <div class="detail-kpi-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="detail-kpi-box">
+          <span class="detail-kpi-label">Production Impact</span>
+          <div style="font-size:0.82rem;font-weight:700;color:var(--green-primary);margin-top:0.3rem;" id="modalProductionImpact">
+            Zero impact (buffer absorbs shift)
+          </div>
+        </div>
+        <div class="detail-kpi-box">
+          <span class="detail-kpi-label">AI Confidence Level</span>
+          <div style="font-size:1.15rem;font-weight:800;color:var(--blue-primary);margin-top:0.2rem;" id="modalConfidence">
+            96.4%
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-footer">
+    <button class="btn btn-secondary" id="simulateActionBtn">Simulate</button>
+    <button class="btn btn-success" id="acceptActionPlanBtn">Accept Plan ✓</button>
+  </div>
+</div>
+
+<!-- ========================================================================
+     MODAL: SCADA / MES WORK ORDER DISPATCH & AUDIT TRAIL
+     ======================================================================== -->
+<div class="drawer-backdrop" id="mesDispatchModalBackdrop"></div>
+<div class="drawer-panel" id="mesDispatchModalPanel" style="width:540px;">
+  <div class="drawer-header">
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <span class="badge badge-normal" style="background:#e0e7ff;color:#4338ca;border-color:#c7d2fe;">OPC-UA / MQTT</span>
+      <h3 class="drawer-title" id="mesDispatchModalTitle">SCADA / MES Work Order Dispatch</h3>
+    </div>
+    <button class="drawer-close-btn" id="closeMesDispatchModalBtn">✕</button>
+  </div>
+
+  <div class="drawer-content">
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">
+        Transmit the AI-optimized stagger schedule directly to the factory PLC/SCADA controller (Siemens SIMATIC S7-1500 / Allen-Bradley ControlLogix) to enforce automated demand-cap limiting.
+      </div>
+
+      <div class="detail-kpi-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="detail-kpi-box">
+          <span class="detail-kpi-label">Target Units</span>
+          <div class="detail-kpi-val tabular-nums" id="mesDispatchTargetUnits">5,000</div>
+        </div>
+        <div class="detail-kpi-box">
+          <span class="detail-kpi-label">Peak Cap Enforced</span>
+          <div class="detail-kpi-val tabular-nums" style="color:var(--blue-primary);" id="mesDispatchPeakCap">1,320 kW</div>
+        </div>
+        <div class="detail-kpi-box">
+          <span class="detail-kpi-label">Estimated Savings</span>
+          <div class="detail-kpi-val tabular-nums" style="color:var(--green-primary);" id="mesDispatchSavings">₹7,400</div>
+        </div>
+      </div>
+
+      <!-- JSON Dispatch Preview Payload -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
+          <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Generated Dispatch Payload (OPC-UA JSON)</span>
+          <span class="badge badge-sparkle" style="font-size:0.68rem;">Verified AI Hash</span>
+        </div>
+        <div class="mes-dispatch-box" id="mesDispatchPayloadView">
+          <!-- Populated by simulation.js -->
+        </div>
+      </div>
+
+      <!-- Historical Audit Trail -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
+          <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">SCADA Execution Audit Trail</span>
+          <span style="font-size:0.72rem;color:var(--text-muted);" id="mesAuditTrailCount">2 Dispatches Logged</span>
+        </div>
+        <div id="mesAuditTrailList" style="display:flex;flex-direction:column;gap:0.5rem;max-height:140px;overflow-y:auto;">
+          <!-- Populated by simulation.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-footer" style="display:flex;justify-content:space-between;gap:0.75rem;">
+    <div style="display:flex;gap:0.5rem;">
+      <button class="btn btn-secondary" id="downloadMesJsonBtn" title="Export JSON Work Order">📥 JSON</button>
+      <button class="btn btn-secondary" id="downloadMesCsvBtn" title="Export CSV Work Order">📥 CSV</button>
+    </div>
+    <button class="btn btn-primary" id="confirmMesDispatchBtn">⚡ Transmit to SCADA Gateway</button>
+  </div>
+</div>
+
+<!-- ========================================================================
+     🤖 ASK ME AI ASSISTANT (FLOATING CHATBOT - ACROSS ALL 4 PAGES)
+     ======================================================================== -->
+<!-- Floating Launch Button -->
+<button class="floating-assistant-launcher" id="floatingAssistantLauncher" title="Ask Me AI Copilot">
+  <div class="launcher-icon-pulse">
+    <span class="launcher-pulse-ring"></span>
+    <span>💬</span>
+  </div>
+  <div class="launcher-text-wrap">
+    <span class="launcher-title">
+      Ask Me <span class="launcher-status-dot"></span>
+    </span>
+    <span class="launcher-subtitle">AI Assistant</span>
+  </div>
+</button>
+
+<!-- Floating Chat Panel -->
+<div class="chat-window" id="chatWindow">
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <div class="chat-avatar-badge">🤖</div>
+      <div class="chat-title-group">
+        <span class="chat-title-text">Energy AI Assistant</span>
+        <span class="chat-title-sub">Ask me about your factory</span>
+      </div>
+    </div>
+    <div class="chat-header-actions">
+      <button class="chat-ctrl-btn" id="clearChatBtn" title="Clear Chat History">↺</button>
+      <button class="chat-ctrl-btn" id="closeChatBtn" title="Close Panel">✕</button>
+    </div>
+  </div>
+
+  <!-- Quick Suggestions Carousel -->
+  <div class="chat-suggestions-bar" id="chatSuggestionsBar">
+    <!-- Populated by chatbot.js -->
+  </div>
+
+  <!-- Messages Stream -->
+  <div class="chat-messages-container" id="chatMessagesContainer">
+    <!-- Populated by chatbot.js -->
+  </div>
+
+  <!-- Input Bar -->
+  <div class="chat-input-bar">
+    <form class="chat-input-form" id="chatInputForm">
+      <input type="text" class="chat-text-input" id="chatTextInput" placeholder="Ask about energy, machines, or simulation..." autocomplete="off">
+      <button type="submit" class="chat-send-btn" title="Send message">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ========================================================================
+     JAVASCRIPT SCRIPTS
+     ======================================================================== -->
+<script src="js/state.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/pages/overview.js"></script>
+<script src="js/pages/machine-monitor.js"></script>
+<script src="js/pages/ai-optimization.js"></script>
+<script src="js/pages/simulation.js"></script>
+<script src="js/chatbot.js"></script>
+<script src="js/demo-tour.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

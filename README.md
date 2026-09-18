@@ -134,7 +134,8 @@ git clone https://github.com/zen5070/Intelligent-industrial-energy-management-sy
 cd Intelligent-industrial-energy-management-system
 
 # 2. Launch local server
-node server.js
+node local-server.js
+# or: npm start
 ```
 Open **`http://localhost:3000/`** in your browser.
 
@@ -163,7 +164,7 @@ Open **`index.html`** directly in any modern browser (Chrome, Edge, Firefox).
 ```
 ├── index.html              # Main application shell with all 4 views & modals
 ├── eneropt_engine.py       # Python telemetry simulation, forecast & optimization engine
-├── server.js               # Zero-dependency Node.js HTTP server
+├── local-server.js         # Zero-dependency Node.js HTTP server
 ├── package.json            # Project metadata and start scripts
 ├── .gitignore              # Git ignore rules
 ├── README.md               # Complete platform documentation

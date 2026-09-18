@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "ENEROPT AI - Intelligent Industrial Energy Management & Optimization",
   "scripts": {
-    "build": "echo 'Static site ready'",
-    "dev": "node server.js",
-    "start": "node server.js"
+    "dev": "node local-server.js",
+    "start": "node local-server.js"
   },
   "keywords": ["energy-management", "industrial-ai", "dashboard", "smart-manufacturing"],
   "author": "Google DeepMind Advanced Agentic Coding",

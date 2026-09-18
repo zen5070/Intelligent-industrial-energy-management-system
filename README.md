@@ -138,7 +138,22 @@ node server.js
 ```
 Open **`http://localhost:3000/`** in your browser.
 
-### Option 2: Direct Browser Launch
+### Option 2: Run with Python Engine & CLI
+```bash
+# 1. Run live telemetry simulation & terminal dashboard
+py eneropt_engine.py
+
+# 2. Run What-If production simulation for 8,000 units
+py eneropt_engine.py --simulate 8000
+
+# 3. Export OPC-UA JSON work order for shopfloor SCADA
+py eneropt_engine.py --export-order
+
+# 4. Launch local Python web server on port 8000
+py eneropt_engine.py --serve
+```
+
+### Option 3: Direct Browser Launch
 Open **`index.html`** directly in any modern browser (Chrome, Edge, Firefox).
 
 ---
@@ -147,10 +162,12 @@ Open **`index.html`** directly in any modern browser (Chrome, Edge, Firefox).
 
 ```
 ├── index.html              # Main application shell with all 4 views & modals
+├── eneropt_engine.py       # Python telemetry simulation, forecast & optimization engine
 ├── server.js               # Zero-dependency Node.js HTTP server
 ├── package.json            # Project metadata and start scripts
 ├── .gitignore              # Git ignore rules
 ├── README.md               # Complete platform documentation
+├── scada_work_order.json   # Sample generated OPC-UA work order export
 ├── css/
 │   ├── design-system.css   # Color tokens, typography, shadows, base resets
 │   ├── layout.css          # Responsive sidebar, header, navigation, content grid

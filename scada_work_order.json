@@ -1,0 +1,29 @@
+{
+  "protocol": "OPC-UA / IEC 62541",
+  "work_order_id": "WO-2026-199257",
+  "generated_at": "2026-09-18 22:37:11",
+  "plant_id": "PLANT-04",
+  "plant_name": "Plant #4 \u2014 Precision Machining Hub",
+  "target_units": 5000,
+  "product_type": "Product A",
+  "target_completion_time": "8h 35m",
+  "enforced_peak_cap_kw": 1320,
+  "contract_limit_kw": 1350,
+  "total_energy_budget_kwh": 12481,
+  "estimated_cost_savings_inr": 7420,
+  "carbon_avoided_kg": 666.7,
+  "stagger_schedule_offsets": {
+    "CNC-02": {
+      "offset_minutes": 15,
+      "stagger_pause_window": "13:45 - 14:00"
+    },
+    "Press-02": {
+      "auto_sleep_idle_sec": 180
+    },
+    "HVAC-01": {
+      "pre_cooling_window": "12:00 - 13:30",
+      "eco_float_window": "13:30 - 15:30"
+    }
+  },
+  "dispatch_status": "READY_FOR_PLC_TRANSMIT"
+}
